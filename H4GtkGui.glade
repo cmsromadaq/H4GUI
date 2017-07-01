@@ -132,6 +132,10 @@
     <property name="title" translatable="yes">H4 Run Control GUI</property>
     <property name="window_position">center</property>
     <child>
+      <object class="GtkScrolledWindow" id="MyScrolledWindow">
+    <child>
+      <object class="GtkViewport" id="MyViewport">
+    <child>
       <object class="GtkVBox" id="vbox2">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
@@ -1838,6 +1842,10 @@
           </packing>
         </child>
       </object>
+    </child>
+    </object>
+    </child>
+    </object>
     </child>
   </object>
   <object class="GtkDialog" id="WaitingWindow">
