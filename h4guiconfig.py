@@ -12,39 +12,17 @@ def configure(self):
     self.pubsocket_bind_address='tcp://*:5566' # address of GUI PUB socket
 
     self.nodes=[ # addresses of connected nodes
-        ('RC','tcp://pcethtb2.cern.ch:6002'),
-#        ('RC','tcp://pcminn03.cern.ch:6002'),
-        ('RO1','tcp://pcethtb1.cern.ch:6002'),
-        # ('RO1','tcp://pcethtb1.cern.ch:6002'),
-        # ('RO2','tcp://pcethtb1.cern.ch:6032'),
-        # ('RO3','tcp://pcethtb1.cern.ch:6042'),
-        # ('RO4','tcp://pcethtb1.cern.ch:6052'),
-        # ('RO5','tcp://pcethtb1.cern.ch:6072'),
-        # ('RO6','tcp://pcethtb1.cern.ch:6082'),
-        # ('RO2','tcp://cms-h4-03:6002'),
-        ('EVTB','tcp://pcethtb2.cern.ch:6502'),
-#        ('EVTB','tcp://pcminn03.cern.ch:6502'),
-#        ('DRCV1','tcp://localhost:6502'),
-        ('DRCV1','tcp://cms-h4-04.cern.ch:6502'),
-        ('DRCV2','tcp://cms-h4-05.cern.ch:6502'),
-#        ('table','tcp://cms-h4-01:6999')
-#        ('table','tcp://128.141.77.89:6999')
-        ('table','tcp://128.141.77.125:6999') 
+
+        ('RC', 'tcp://localhost:6002'),
+        ('EVTB', 'tcp://localhost:6502'),
+        ('RO1', 'tcp://localhost:7002'),
+        #('table','tcp://128.141.77.125:6999')
         ]
 
     self.keepalive={} # nodes to monitor (comment to remove, never put False)
     self.keepalive['RC']=True
-    self.keepalive['RO1']=True
-    # self.keepalive['RO2']=True
-    # self.keepalive['RO3']=True
-    # self.keepalive['RO4']=True
-    # self.keepalive['RO5']=True
-    # self.keepalive['RO6']=True
-#    self.keepalive['RO2']=False
     self.keepalive['EVTB']=True
-    self.keepalive['DRCV1']=True
-    self.keepalive['DRCV2']=True
-#    self.keepalive['table']=True
+    self.keepalive['RO1']=True
 
     self.temperatureplot=None # 'http://blabla/tempplot.png' to be displayed for temperature history
 
@@ -58,13 +36,14 @@ def configure(self):
     self.scripts={ # scripts linked to GUI buttons
         'sync_clocks': '../H4DAQ/scripts/syncclocks.sh',
         'free_space': None,
+        'start_daemons' : '',
 #        'start_daemons': '../H4DAQ/scripts/startall.sh -v3 --rc=pcethtb2 --eb=pcethtb2 --dr=pcethtb1 --drcv=cms-h4-04,cms-h4-05 --drcvrecompile --tag=H4_2016_07_ECAL', #std config for h4
         #'start_daemons': '../H4DAQ/scripts/startall.sh -v3 --rc=pcethtb2 --eb=pcethtb2 --dr=pcethtb1 --drcv=cms-h4-04,cms-h4-05 --drcvrecompile --tag=H4_2016_07_ECAL_LOW_FREQ', #std config for h4 with digitizer frequency of 2.5 GHz
 #        'start_daemons': '../H4DAQ/scripts/startall.sh -v3 --rc=pcethtb2 --eb=pcethtb2 --dr=pcethtb1 --drcv=cms-h4-04,cms-h4-05 --drcvrecompile --tag=H4_2016_09_ECAL_SPIKES_LOW_FREQ', #config for ecal spikes with digitizer frequency of 2.5 GHz
 #        'start_daemons': '../H4DAQ/scripts/startall.sh -v3 --rc=pcethtb2 --eb=pcethtb2 --dr=pcethtb1 --drcv=cms-h4-04,cms-h4-05 --drcvrecompile --tag=H4_2016_09_ECAL_SPIKES', #config for ecal spikes
 #        'start_daemons': '../H4DAQ/scripts/startall.sh -v3 --rc=pcethtb2 --eb=pcethtb2 --dr=pcethtb1 --drcv=cms-h4-04,cms-h4-05 --drcvrecompile --tag=H4_2016_07_ECAL_CSI', #std config for h4
 
-        'start_daemons': '../H4DAQ/scripts/startall.sh -v3 --rc=pcethtb2 --eb=pcethtb2 --dr=pcethtb1 --drcv=cms-h4-04,cms-h4-05 --drcvrecompile --tag=H4_2017_06_MTD', #std config for h4
+        'start_daemons': '../H4DAQ/scripts/startall.sh -v3 --rc=localhost --eb=localhost --ext="/home/cmsdaq/DAQ/TOFPET-DAQ/start_tofpet_daq_as_daemon.sh" --tag=STANDALONE', #std config for standalone
         # 'start_daemons': '../H4DAQ/scripts/startall.sh -v3 --rc=pcethtb2 --dr=pcethtb1:3:4:5:7:8: --eb=pcethtb2 --drcv=cms-h4-04,cms-h4-05 --tag=H4_2017_06_TIA_TEST --gitbranch=vfe_dev', #std config for VFEs
         #'start_daemons': '../H4DAQ/scripts/startall.sh -v3 --gitbranch=vfe_dev --rc=pcethtb2 --eb=pcethtb2 --dr=pcethtb1 --drcv=cms-h4-04,cms-h4-05 --drcvrecompile --tag=H4_2016_07_ECAL_CSI', #std config for h4
         #'start_daemons': '../H4DAQ/scripts/startall.sh -v3 --rc=pcethtb2 --tag=H4_2016_07_ECAL_CSI', #std config for h4
@@ -77,7 +56,7 @@ def configure(self):
 #       'start_daemons': '../H4DAQ/scripts/startall.sh -v3 --rc=pcethtb2 --eb=pcethtb2  --drcv=cms-h4-04,cms-h4-05 --drcvrecompile --tag=H4_2016_06_LYSO',
 #       'start_daemons': '../H4DAQ/scripts/startall.sh -v3 --rc=pcethtb2 --eb=pcethtb2 --drcv=cms-h4-04,cms-h4-05 --drcvrecompile',
 #        'start_daemons': '../H4DAQ/scripts/startall.sh -v3 --rc=pcethtb2 --eb=pcethtb1 --dr=pcethtb1 --drcv=cms-h4-05 --drcvrecompile',
-        'kill_daemons': '../H4DAQ/scripts/killall.sh --tag=H4_2016'
+        'kill_daemons': '../H4DAQ/scripts/killall.sh'
         }
 #
 

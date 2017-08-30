@@ -26,6 +26,14 @@ class H4GtkGui:
 
         self.configure()
 
+        self.tofpet_config = {
+            "rawdir"         : "/data/raw/TOFPET/",
+            "ampl_mode"      : "qdc",
+            "spill_duration" : 6.,
+            "over_voltage"   : 4,
+            "threshold"      : 1.
+        }
+
         self.gui_out_messages={
             'startrun': 'GUI_STARTRUN',
             'pauserun': 'GUI_PAUSERUN',
@@ -122,7 +130,12 @@ class H4GtkGui:
         self.mainWindow.set_position(gtk.WIN_POS_CENTER_ALWAYS)
         self.set_spinbuttons_properties()
         self.mywaiter = waiter(self.gm)
+        # s = self.mainWindow.get_screen()
+        # m = s.get_monitor_at_window(s.get_active_window())
+        # monitor = s.get_monitor_geometry(m)
+        self.gm.get_object("MyScrolledWindow").set_usize(1000,700)
 
+        self.drawConfigTOFPET()
         if self.sumptuous_browser:
             self.btabs=[]
             BrowserTab(self.gm.get_object('dqmnotebook'),self.btabs,'http://localhost/DQM')
@@ -1048,7 +1061,33 @@ class H4GtkGui:
         output = p1.communicate()[0]
         self.Log(output)
 
+    def drawConfigTOFPET(self):
+        self.gm.get_object("frameTOFPETConfig").set(ratio=10)
+        ###---set options and default
+        self.init_gtkcombobox(self.gm.get_object('entryOV'),[ov for ov in range(0, 6)])
+        self.gm.get_object('entryOV').set_active(self.tofpet_config['over_voltage'])
+        self.gm.get_object('entryThr').set_text(str(self.tofpet_config['threshold']))
+        self.gm.get_object('entrySpill').set_text(str(self.tofpet_config['spill_duration']))
+        self.init_gtkcombobox(self.gm.get_object('entryAmplMode'),['qdc','tot'])
+        self.gm.get_object('entryAmplMode').set_active(0 if self.tofpet_config['ampl_mode']=="qdc" else 1)
+        self.gm.get_object('entryRawDir').set_text(self.tofpet_config['rawdir'])
+        self.gm.get_object('buttonUpdateTOFPETConfig').modify_bg(gtk.STATE_NORMAL, gtk.gdk.Color('green'))
 
+    def on_buttonUpdateTOFPETConfig_clicked(self, *args):
+        self.mywaiter.reset()
+        self.mywaiter.set_layout('<b>Do you really want to update the TOFPET config ?</b>','No','Yes',color='orange')
+        self.mywaiter.set_exit_func(self.send_TOFPET_config,[])
+        self.mywaiter.run()
+
+    def send_TOFPET_config(self, *args):
+        ###---set current values
+        self.tofpet_config['over_voltage'] = self.gm.get_object('entryOV').get_active_text()
+        self.tofpet_config['threshold'] = self.gm.get_object('entryThr').get_text()
+        self.tofpet_config['spill_duration'] = self.gm.get_object('entrySpill').get_text()
+        self.tofpet_config['ampl_mode'] = self.gm.get_object('entryAmplMode').get_active_text()
+        self.tofpet_config['rawdir'] = self.gm.get_object('entryRawDir').get_text()
+        for option, value in self.tofpet_config.iteritems():
+            self.send_message('GUI_TOFPET_CONFIG %s %s' % (option, str(value)))
 
     def videostream(self):
         gtk.gdk.threads_enter()
