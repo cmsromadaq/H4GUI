@@ -316,9 +316,9 @@ def configure(self):
 #    otherxtals['BGO_CRY_24']= (49.0,-49.0)
 ##
 
-    # CeF3 single channel 
-    # ARASH: once you are sure about the center edit the CEF3_CENTER position only from the FIRST line below 
-    self.tableposdictionary['CEF3_CENTER']=(194.0,254.0)
+    # CeF3 single channel
+    #self.tableposdictionary['CEF3_CENTER']=(194.0,254.0)
+    self.tableposdictionary['CEF3_CENTER']=(229.0,230.0)
     self.tableposdictionary['CEF3_CENTER_ALT']=(224.0,294.5)
     otherxtals['CEF3_UP3']= (0.0,15.0)
     otherxtals['CEF3_UP2']= (0.0,10.0)

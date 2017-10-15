@@ -122,6 +122,7 @@ class H4GtkGui:
         self.mainWindow.set_position(gtk.WIN_POS_CENTER_ALWAYS)
         self.set_spinbuttons_properties()
         self.mywaiter = waiter(self.gm)
+        self.gm.get_object("MyScrolledWindow").set_usize(1000,700)
 
         if self.sumptuous_browser:
             self.btabs=[]
